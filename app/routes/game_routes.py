@@ -3,6 +3,7 @@ from extensions import db
 from ..models.player import Player
 from ..models.game import Game, GamePlayers
 from ..services.game_service import init_game
+from ..models.hands import Hand
 
 game_bp = Blueprint('game', __name__)
 
@@ -30,10 +31,17 @@ def create_game():
 
 @game_bp.route('/end_game/<int:game_id>', methods=["DELETE"])
 def end_game(game_id):
-    game = Game.query.get(game_id)
-    if game:
-        db.session.delete(game)
-        db.session.commit()
-        return jsonify({'message': 'game successfully deleted.'}), 200
+    game = db.session.get(Game, game_id) 
+    if not game:
+        return jsonify({'error':'game not found'}), 404
+    gamePlayer = GamePlayers.query.filter_by(game_id= game.id).first()
+    if not gamePlayer:
+        return jsonify({'error':'Player in game not found'})
+    hand = Hand.query.filter_by(player_id= gamePlayer.player_id).order_by(Hand.id.asc()).first()
+    if not hand:
+        return jsonify({'error': 'Hand not found for player.'})
+    db.session.delete(hand)
+    db.session.delete(game)
+    db.session.commit()
+    return jsonify({'message': 'game successfully deleted.'})
     
-    return jsonify({'error':"game not found"}), 404

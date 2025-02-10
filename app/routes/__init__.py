@@ -1,1 +1,1 @@
-from .player import *
+from .player_routes import *

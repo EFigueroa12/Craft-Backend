@@ -12,15 +12,13 @@ class Game(db.Model):
     __tablename__ = 'game'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     game_status = db.Column(SAEnum(GameStatus), nullable=False)
-    # current_turn_player_id = db.Column(db.Integer, ForeignKey("game_player.id"), nullable=False)
 
-    current_turn_player = relationship("GamePlayers", back_populates="game", cascade="all, delete")
+    current_turn_player = relationship("GamePlayers", back_populates="game", cascade="all, delete-orphan")
 
-    rsc_decks = relationship("ResourceDeck", back_populates="game", cascade="all, delete")
-    id_decks = relationship("IDDeck", back_populates="game", cascade="all, delete")
+    rsc_decks = relationship("ResourceDeck", back_populates="game", cascade="all, delete-orphan")
+    id_decks = relationship("IDDeck", back_populates="game", cascade="all, delete-orphan")
 
-    # game_players = relationship("GamePlayers", back_populates="game")
-    game_turns = relationship("Turns", back_populates="game", cascade="all, delete")
+    game_turns = relationship("Turns", back_populates="game", cascade="all, delete-orphan")
 
 
     def __repr__(self):

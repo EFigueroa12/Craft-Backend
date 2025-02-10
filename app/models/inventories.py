@@ -6,7 +6,6 @@ class Inventory(db.Model):
     __tablename__ = 'inventory'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     player_id = db.Column(db.Integer, ForeignKey("player.id"), nullable=False)
-    # resourcedeck_id = db.Column(db.Integer, ForeignKey("resource_deck.id"), nullable=False)
 
     resourcedeck_card = relationship("ResourceDeckCard", back_populates="inventory")
     player = relationship("Player", back_populates="inventory")

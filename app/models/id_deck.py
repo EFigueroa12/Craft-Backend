@@ -32,5 +32,14 @@ class IDDeckCard(db.Model):
     hand_id = db.Column(db.Integer, ForeignKey("hand.id"), nullable=True)
     hand = relationship("Hand", back_populates="iddeck_card")
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "deck_id": self.deck_id,
+            "hand_id":self.hand_id,
+            "card_type": self.card_type.value,
+            "position": self.position
+        }
+
     def __repr__(self):
         return f'<IDDeckCard (deck_id = {self.deck_id}, card_type={self.card_type.value}, position={self.position})>'

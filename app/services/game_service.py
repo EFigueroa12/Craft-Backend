@@ -18,7 +18,6 @@ def init_game(player_id):
     db.session.add(game_players)
     db.session.flush()
 
-    #deck has game id-> deckCard has deck_id, position, and card_typepip i
     #ID deck
     id_cards = ["scissors", "rock", "paper", "cockroach"] * 4 #12 cards
     random.shuffle(id_cards)
@@ -28,13 +27,16 @@ def init_game(player_id):
 
     hand = Hand(player_id=player_id)
     db.session.add(hand)
-    db.session.flush()
-    # handid = hand.query.filter_by(player_id=player_id).first()
+    db.session.commit()
 
     for order, card in enumerate(id_cards):
         id_card = IDDeckCard(deck_id=id_deck.id, card_type=card, position= order, hand_id=None)
         db.session.add(id_card)
         db.session.flush()
+
+    top_two_id_cards = db.session.query(IDDeckCard).filter(IDDeckCard.deck_id== id_deck.id).order_by(IDDeckCard.position).limit(2).all()
+    for card in top_two_id_cards:
+        card.hand_id = hand.id
 
     #RSC deck
     rsc_cards = ["wood", "stone", "metal"] * 12 #36 resource cards
@@ -46,7 +48,6 @@ def init_game(player_id):
     inventory = Inventory(player_id=player_id)
     db.session.add(inventory)
     db.session.flush()
-    # inventoryid = inventory.query.filter_by(player_id=player_id).first()
 
     for order, card in enumerate(rsc_cards):
         rsc_card = ResourceDeckCard(deck_id=rsc_deck.id, card_type=card, position=order, inventory_id=None)

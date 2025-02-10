@@ -7,9 +7,7 @@ class ResourceDeck(db.Model):
     __tablename__ = 'resource_deck'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     game_id = db.Column(db.Integer, ForeignKey("game.id"), nullable=False)
-    # inventory_id = db.Column(db.Integer, ForeignKey("inventory.id"), nullable=False)
 
-    # inventory = relationship("Inventory", back_populates="resourcedeck")
     cards = relationship("ResourceDeckCard", back_populates="deck", cascade="all, delete-orphan")
     game = relationship("Game", back_populates="rsc_decks")
 
